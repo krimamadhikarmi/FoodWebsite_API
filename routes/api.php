@@ -10,10 +10,3 @@ Route::apiResource('products',ProductController::class);
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
-Route::post('/test', function(Request $request) {
-    return response()->json([
-        'message' => 'API hit!',
-        'data' => $request->all()
-    ]);
-});

@@ -38,4 +38,44 @@ class ProductController extends Controller
         ], 201);
     }
 
+     public function show(Product $product)
+    {
+        return new ProductResource($product);
+
+    }
+
+    public function update(Product $product,Request $request){
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'tagline' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'ingredients' => 'required|string|max:255',
+            'weight' => 'required|numeric',
+        ]);
+
+        $product->update($validated);
+        return response()->json(
+            [
+                'message' => 'Product Updated Successfully',
+                'data' => new ProductResource($product)
+            ],
+            200
+        );
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return response()->json(
+            [
+                'message' => 'Product Deleted Successfully',
+
+            ],
+            200
+        );
+
+    }
+
 }
