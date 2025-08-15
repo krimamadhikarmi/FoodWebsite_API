@@ -28,7 +28,29 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'ingredients' => 'required|string|max:255',
             'weight' => 'required|numeric',
+            'image' => 'nullable|string',
         ]);
+
+        //image handling through api
+        if ($request->has('image')) {
+            $image = $request->image;
+
+            if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+                $image = substr($image, strpos($image, ',') + 1);
+                $type = strtolower($type[1]); // jpg, png, gif
+                $image = base64_decode($image);
+                $filename = time() . '.' . $type;
+                $folder = storage_path('app/public/products');
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0755, true);
+                }
+
+                file_put_contents($folder . '/' . $filename, $image);
+                $validated['image'] = 'products/' . $filename;
+            }
+
+        }
+
 
         $product = Product::create($validated);
 
@@ -38,13 +60,14 @@ class ProductController extends Controller
         ], 201);
     }
 
-     public function show(Product $product)
+    public function show(Product $product)
     {
         return new ProductResource($product);
 
     }
 
-    public function update(Product $product,Request $request){
+    public function update(Product $product, Request $request)
+    {
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -53,7 +76,20 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'ingredients' => 'required|string|max:255',
             'weight' => 'required|numeric',
+            'image' => 'nullable|string',
         ]);
+
+        if ($request->has('image')) {
+            $image = $request->image;
+            if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+                $image = substr($image, strpos($image, ',') + 1);
+                $type = strtolower($type[1]);
+                $image = base64_decode($image);
+                $filename = time() . '.' . $type;
+                file_put_contents(storage_path('app/public/products/' . $filename), $image);
+                $validated['image'] = 'products/' . $filename;
+            }
+        }
 
         $product->update($validated);
         return response()->json(
