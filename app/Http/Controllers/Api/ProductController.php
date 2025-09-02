@@ -70,14 +70,15 @@ class ProductController extends Controller
     {
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'tagline' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'ingredients' => 'required|string|max:255',
-            'weight' => 'required|numeric',
+            'name' => 'sometimes|string|max:255',
+            'tagline' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'price' => 'sometimes|numeric|min:0',
+            'ingredients' => 'sometimes|string|max:255',
+            'weight' => 'sometimes|numeric',
             'image' => 'nullable|string',
         ]);
+
 
         if ($request->has('image')) {
             $image = $request->image;

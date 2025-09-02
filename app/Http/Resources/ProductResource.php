@@ -20,7 +20,7 @@ class ProductResource extends JsonResource
             'tagline'=>$this->tagline,
             'weight'=>$this->weight,
             'price'=>$this->price,
-            'ingridents'=>$this->ingridents,
+            'ingredients'=>$this->ingredients,
             'description'=>$this->description,
             'image_url' => $this->image ? url('storage/' . $this->image) : null,
             'created_at'=>$this->created_at,
